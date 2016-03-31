@@ -11,7 +11,7 @@
         [
 			"out.say('progress', 'Starting to convert bbox to GeoJSON polygons ...');",
 			"/* set output field */",
-			"out.field = context.node.params.in_field + context.node.params.suffix; "
+			"out.field = context.node.params.out_field; "
 		],
 		"run": 
 		[
@@ -43,6 +43,8 @@
 			"        ] ",
 			"    }; ",
 			"out.value = poly; ",
+			"} else { ",
+			"    out.value = null; ",
 			"}"
 		],
 		"finish": "out.say('finish', 'Conversion done!');"
@@ -52,7 +54,7 @@
 		"params":
 		[
 			"<label>in field:</label> <input class='dynamic_field' name='in_field'/>",
-			"<label>output field suffix:</label> <input name='suffix'/ value='_polygon'>"
+			"<label>output field suffix:</label> <input name='out_field'/ value='_polygon'>"
 		],
 		"settings":"no settings"
 	}

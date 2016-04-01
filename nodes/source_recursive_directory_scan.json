@@ -12,7 +12,18 @@
 		],
         "bye": "out.say('news', 'Deleted directory scan node. Data removed. Bye!'); ",
 		"init":"out.say('progress', context.node.title);",
-		"run":"out.value = context.data;",
+		"run": 
+		[
+			"var file_objects = []; ",
+			"for (var i = 0; i < context.data.length; i++) { ",
+			"    var f = {}; ",
+			"    f.basename = context.path.basename(context.data[i]); ",
+			"    f.dirname = context.path.dirname(context.data[i]); ",
+			"    f[context.MP.source] = context.node._id; ",
+			"    file_objects.push(f); ",
+			"}",
+			"out.value = file_objects; "
+		],
 		"finish":"out.say('finish', '<h2>Data imported</h2> from directory ' + context.node.params.root);"
 	},
 	

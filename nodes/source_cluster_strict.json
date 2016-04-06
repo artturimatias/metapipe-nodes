@@ -1,0 +1,32 @@
+{
+	"nodeid": "source_cluster_strict",
+	"type": "source",
+	"subtype": "cluster",
+	"title": "Cluster",
+	"description": "Group by values (clustering)",
+	"type_desc": "With source node you can import your data to metapipe. Your data can be in file (xml, csv, tsv or json) or data can be imported from API.",
+
+
+	"scripts": {
+		"hello": 
+		[
+			"out.say('news', 'You added a cluster node');",
+			"context.node.title = context.node.params.file; "
+		],
+        "bye": "out.say('news', 'Deleted file import node. Data removed. Bye!'); ",
+		"init":"out.say('progress', context.node.title);",
+		"run":"out.value = context.data;",
+		"finish":"out.say('finish', 'Data clustered from collection ' + context.node.params.source_collection);"
+	},
+	
+	"views": {
+		"params": [
+			"<label>source collection </label>",
+			"<input name='source_collection' /> ",
+			"<label>field </label>",
+			"<input name='in_field' /> "
+		],
+		"settings":"no settings"
+	}
+
+}

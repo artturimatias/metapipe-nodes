@@ -5,14 +5,20 @@
 	"subtype": "georeferencing",
 	"description": "Convert bounding box to GeoJSON Polygon",
 	"scripts": {
-		"hello": "out.say('news', 'You added a GeoJSON node'); ",
+	
+		"hello":[ 
+			"out.say('news', 'You added a GeoJSON node'); ",
+			"/* set output field */",
+			"context.node.out_field = context.node.params.in_field + '_' + context.node.params.suffix; "
+		],
+		
         "bye": "out.say('news', 'Deleted GeoJSON node. Bye!'); ",
+        
         "init":
         [
-			"out.say('progress', 'Starting to convert bbox to GeoJSON polygons ...');",
-			"/* set output field */",
-			"out.field = context.node.params.out_field; "
+			"out.say('progress', 'Starting to convert bbox to GeoJSON polygons ...');"
 		],
+		
 		"run": 
 		[
 			"var bbox = context.doc[context.node.params.in_field]; ",
@@ -47,6 +53,7 @@
 			"    out.value = null; ",
 			"}"
 		],
+		
 		"finish": "out.say('finish', 'Conversion done!');"
 	},
 	

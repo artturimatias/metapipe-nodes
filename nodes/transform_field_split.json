@@ -5,24 +5,27 @@
 	"subtype": "string manipulation",
 	"description": "Split field to an array.",
 	"scripts": {
-		"hello": "out.say('news', 'You added a Split node'); ",
+	
+		"hello": 
+		[
+			"out.say('news', 'You added a Split node'); ",
+			"/* set output field */",
+			"context.node.out_field = context.node.params.in_field + '_' + context.node.params.suffix; "
+		],
+		
         "bye": "out.say('news', 'Deleted Split node. Bye!'); ",
+        
         "init":
         [
-			"out.say('progress', 'Starting Splitting...');",
-			"/* set output field */",
-			"out.field = context.node.params.in_field + context.node.params.suffix; "
+			"out.say('progress', 'Starting Splitting...'); "
 		],
+		
 		"run": 
 		[
-			"function getDescendantProp(obj, desc) { ",
-			"    var arr = desc.split('.'); ",
-			"    while(arr.length && (obj = obj[arr.shift()])); ",
-			"    return obj; ",
-            "}",
-            "var val = getDescendantProp(context.doc, context.node.params.in_field); ",
+            "var val = context.doc[context.node.params.in_field]; ",
 			"out.value = val.split(context.node.settings.separator);"
 		],
+		
 		"finish": "out.say('finish', 'Split done!');"
 	},
 	

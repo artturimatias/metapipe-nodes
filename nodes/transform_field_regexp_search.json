@@ -5,14 +5,21 @@
 	"subtype": "string manipulation",
 	"description": "Extract some piece from string by regular expression",
 	"scripts": {
-		"hello": "out.say('news', 'You added a REGEXP node'); ",
+	
+		"hello":
+		[ 
+			"out.say('news', 'You added a REGEXP node'); ",
+			"/* set output field */",
+			"context.node.out_field = context.node.params.in_field + '_' + context.node.params.suffix; "
+		],
+		
         "bye": "out.say('news', 'Deleted REGEXP node. Bye!'); ",
+        
         "init":
         [
-			"out.say('progress', 'Starting Extracting...');",
-			"/* set output field */",
-			"out.field = context.node.params.in_field + context.node.params.suffix; "
+			"out.say('progress', 'Starting Extracting...');"
 		],
+		
 		"run": 
 		[
 			"var reg = new RegExp(context.node.settings.regexp, context.node.settings.flags); ",
@@ -20,6 +27,7 @@
             "var result = reg.exec(val); ",
 			"out.value = result; "
 		],
+		
 		"finish": "out.say('finish', 'REGEXP done!');"
 	},
 	

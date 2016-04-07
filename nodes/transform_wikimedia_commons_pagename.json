@@ -5,15 +5,18 @@
 	"subtype": "wikimedia",
 	"description": "Create commons page title",
 	"scripts": {
-		"hello": "out.say('news', 'You added a page name node'); ",
+		"hello":
+		[
+			"out.say('news', 'You added a page name node'); ",
+			"/* set output field */",
+			"context.node.out_field = context.node.params.out_field; "
+		],
+		
         "bye": "out.say('news', 'Deleted page name node. Bye!'); ",
+        
         "init":
         [
-			"out.say('progress', 'Starting...');",
-			"/* set output field */",
-			"out.field = context.node.params.out_field; ",
-			
-			""
+			"out.say('progress', 'Starting...');"
 		],
 		
 		"run": 

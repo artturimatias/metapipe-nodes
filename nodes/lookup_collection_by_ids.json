@@ -1,5 +1,5 @@
 {
-	"nodeid": "lookup_collection_by_field",
+	"nodeid": "lookup_collection_by_ids",
 	"title": "Collection lookup",
 	"type": "lookup",
 	"subtype": "collection",
@@ -8,8 +8,7 @@
 	"scripts": {
 		"hello": [
 			"out.say('news', 'You added a collection lookup node'); ",
-			"context.node.out_field = context.node.params.target_key + context.node.params.suffix;",
-			"context.node.collection = context.node.params.lookup_collection; "
+			"context.node.collection = context.node.params.source_collection; "
 		],
         "bye": "out.say('news', 'Deleted lookup node. Bye!'); ",
 		
@@ -21,9 +20,8 @@
 		
 		"run":
 		[
-			"out.value = context.doc[context.node.params.lookup_key];",
 			"out.updatequery = {}; ",
-			"out.updatequery[context.node.params.target_key] = out.value; ",
+			"out.updatequery._id = {$in:context.doc.ids}; ",
 			"out.setter = {}; ",
 			"out.setter[context.node.out_field] = context.doc[context.node.params.copy_field]; "
 		],
@@ -34,15 +32,11 @@
 		"data_static":"<button data-bind=\"click: prevPage\">prev</button>\n<button data-bind=\"click: nextPage\">next</button>\n<div id=\"node_bar\" class=\"selected\">\n<h2 class=\"selected\">Flickr image descriptions</h2>\n</div>\n<div>\n<table>\n<thead>\n<tr>\n<th id=\"vcc\" data-bind=\"click: sort\">[count]</th>\n<th id=\"id\" data-bind=\"click: sort\">id</th>\n<th id=\"link\" >link</th>\n<th id=\"title\" >title</th>\n<th id=\"description\" >description</th>\n </tr>\n</thead>\n\n<tbody data-bind=\"foreach: collection\">\n<tr>\n<td data-bind=\"text: vcc\"></td>\n<td data-bind=\"text: id\"></td>\n<td >\n<a target=\"_blank\" data-bind=\"attr:{href: id_photo_details.urls.url[0]._content}\">link</a>\n</td>\n<td data-bind=\"text: title\"></td>\n<td data-bind=\"text: id_photo_details.description._content\"></td>\n\n </tr>\n </tbody>\n </table>\n</div>\n",
 		"params": [
 			"<label>lookup collection</label> collection name where lookup data is",
-			"<input name='lookup_collection' /> ",
-			"<label>lookup key</label> name of the field that connects collections",
-			"<input name='lookup_key' /> ",
-			"<label>target key</label> name of the field that connects collections",
-			"<input name='target_key' /> ",
+			"<input class='dynamic_collection' name='source_collection' /> ",
 			"<label>copy field</label> which field is copied to target collection",
 			"<input name='copy_field' /> ",
-			"<label>out field suffix</label> out field is 'target key' + 'suffix'",
-			"<input name='suffix' value='_lookup'/> "
+			"<label>out field</label> ",
+			"<input name='out_field' value='lookup'/> "
 		],
 		"settings":"no settings"
 	}

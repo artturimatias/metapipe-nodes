@@ -18,7 +18,9 @@
         "init": 
         [
             "out.url = context.node.params.warper + '/maps.json';",
-            "out.say ('news', context.node.params.warper + '/maps.json');"
+            "out.say ('news', context.node.params.warper + '/maps.json');",
+            "if(context.node.settings.sample_to != null) ",
+            "    context.node.sample_to = parseInt(context.node.settings.sample_to); "
         ],
         
         "run":
@@ -37,6 +39,11 @@
             "   if(current_page < total_pages) {",
             "       out.url = context.node.params.warper + '/maps.json?page=' + next_page; ",
             "   }",
+            "    /* stop if sample is set and current page is bigger than sample */",
+            "   if(context.node.sample_to) {",
+            "       if(current_page > context.node.sample_to)",
+            "          out.url = ''; ",
+            "   }",
             "}"
         ],
         "finish":"out.say('finish', 'Map data fetched from ' + context.node.params.warper); "
@@ -51,7 +58,11 @@
                     "    <option value='http://maps.nypl.org/warper/'>maps.nypl.org/warper</option>",
                     "</select>"
                  ],
-        "settings":"no settings"
+		"settings":
+		[
+			"<div class='help'>If you do not want to fetch all records, then define page maximum page count below.</div>",
+			"<label>max page count</label>leave empty for all<input name='sample_to'/>"
+		]
     }
 
 }

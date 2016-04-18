@@ -11,19 +11,27 @@
         [
             "out.say('news', 'You added a download node'); "
         ],
+        
         "init":
         [
             "out.field = context.node.params.field + '_download'; ",
             "out.say('progress', 'I have ' + context.doc_count + ' images to download!'); "
         ],
+        
+        "pre_run": 
+        [
+			"var url = context.doc[context.node.params.field]; ",
+			"var splitted = url.split('/'); ",
+			"out.url = url; ",
+			"out.file = splitted[splitted.length - 1]; ",
+			"out.say('progress', out.url); "
+        ],
+        
         "run": 
         [
-                "var url = context.doc[context.node.params.field]; ",
-                "var splitted = url.split('/'); ",
-                "out.url = url; ",
-                "out.file = splitted[splitted.length - 1]; ",
-                "out.say('progress', out.url); "
+			"out.value = context.node.dir + out.file; "
         ],
+        
         "finish":"out.say('finish', 'Images downloaded!')"
     },
     
@@ -31,9 +39,12 @@
         "params":
         [
             "<input type=\"hidden\" name=\"field\" id=\"field\" value='url_m'/><br>",
-            "<input name='fileradio' class='short_input' type='radio' value='original' checked>use original<br>",
-            "<input name='fileradio' class='short_input' type='radio' value='own'>make your own",
-            "<label>construct filename</label>",
+            "<label>How to name files?</label> ",
+            "<select name='filename_type'> ",
+            "    <option value='original' selected='selected'>use original</option> ",
+            "    <option value='own'>make your own</option>",
+            "</select> ",
+            "<label>construct your own filename</label>",
             "<input name='file__1' class='short_input'/> + ",
             "<input name='file__2' class='dynamic_field middle_input' /> + <br>",
             "<input name='file__3' class='short_input'/> + ",

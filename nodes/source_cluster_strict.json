@@ -1,29 +1,29 @@
 {
-	"nodeid": "source_cluster_strict",
+	"nodeid": "source_group",
 	"type": "source",
-	"subtype": "cluster",
-	"title": "Cluster",
-	"description": "Group by values (clustering)",
-	"type_desc": "With source node you can import your data to metapipe. Your data can be in file (xml, csv, tsv or json) or data can be imported from API.",
-
+	"subtype": "group",
+	"title": "Group fields",
+	"description": "Group by values",
 
 	"scripts": {
 		"hello": 
 		[
-			"out.say('news', 'You added a cluster node');",
-			"context.node.title = context.node.params.file; "
+			"out.say('news', 'You added a cluster node');"
 		],
-        "bye": "out.say('news', 'Deleted file import node. Data removed. Bye!'); ",
+		
+        "bye": "out.say('news', 'Deleted group node. Bye!'); ",
 		"init":"out.say('progress', context.node.title);",
+		
 		"run":"out.value = context.data;",
-		"finish":"out.say('finish', 'Data clustered from collection ' + context.node.params.source_collection);"
+		
+		"finish":"out.say('finish', 'Data grouped from collection ' + context.node.params.source_collection);"
 	},
 	
 	"views": {
 		"params": [
-			"<label>source collection </label>",
-			"<input name='source_collection' /> ",
-			"<label>field </label>",
+			"<label>collection </label>",
+			"<input class='dynamic_collection' name='source_collection' /> ",
+			"<label>field to be grouped </label>",
 			"<input name='in_field' /> "
 		],
 		"settings":"no settings"

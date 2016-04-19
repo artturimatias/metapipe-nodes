@@ -18,7 +18,7 @@
 			"var u = '&fl[]=identifier&fl[]=title&fl[]=description&fl[]=collection&fl[]=source&fl[]=creator&rows='+context.node.params.docs_per_page+'&output=json'; ",
             "out.url = 'https://archive.org/advancedsearch.php?q=' + context.node.params.query + u;",
             " /* since out.url gets wiped every run, lets save query in other veriable*/",
-            "context.mydata.query_url = out.url; ",
+            "context.query_url = out.url; ",
             "out.say ('news', 'starting to fetch query ' + out.url);",
             
             "if(context.node.settings.sample_to != null) ",
@@ -43,7 +43,7 @@
             "              out.url = ''; ",
             "       } else {",
             "           currentPage++; ",
-            "           out.url = context.mydata.query_url + '&page=' + currentPage; ",
+            "           out.url = context.query_url + '&page=' + currentPage; ",
             "       }",
             "   }",
 

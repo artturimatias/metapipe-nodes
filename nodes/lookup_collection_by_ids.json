@@ -10,6 +10,7 @@
 			"out.say('news', 'You added a collection lookup node'); ",
 			"context.node.collection = context.node.params.source_collection; "
 		],
+		
         "bye": "out.say('news', 'Deleted lookup node. Bye!'); ",
 		
 		"init": [

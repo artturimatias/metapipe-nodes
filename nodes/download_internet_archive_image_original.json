@@ -1,5 +1,5 @@
 {
-    "nodeid": "download_internet_archive_image_original",
+    "nodeid": "download_internet_archive_image",
     "type": "download",
     "subtype": "Internet Archive",
     "title": "images",
@@ -10,6 +10,8 @@
         "hello":
         [
             "out.say('news', 'You added a download node'); ",
+            "context.node.out_field = context.node.params.out_field; ",
+            "context.node.dirsuffix = '_' + context.node.params.filesize; ",
             "context.node.title = context.node.title + ' (' + context.node.params.filesize + ')'; "
         ],
         
@@ -33,7 +35,9 @@
 			"            break; ",
 			"        }",
 			"    } else { ", 
-			"        if( file.source == 'original' && file.format != 'Metadata') { ",
+			"        var ext_split = file.name.split('.'); ",
+			"        var ext = ext_split[ext_split.length - 1].toLowerCase(); ",
+			"        if( file.source == 'original' && file.format != 'Metadata' && ext != 'yaml' && ext != 'xml') { ",
 			"            out.url = context.base_url + context.doc.identifier + '/' + file.name; ",
 			"            out.file = file.name; ",
 			"            break; ",
@@ -48,13 +52,14 @@
         
         "run": 
         [
-			"if(context.fileerror || context.error) { ",
-			"    out.say('error', context.fileerror); ",
+			"if(context.error) { ",
 			"    out.say('error', context.error); ",
+			"    out.value = context.error; ",
 			"} else { ",
 			"    var len = parseInt(context.response.headers['content-length'], 10); ",
 			"    var total = len / 1048576; ",
 			"    out.say('progress', 'Downloaded ' + total.toFixed(2) + ' Mt'); ",
+			"    out.value = context.path.join(context.node.dir, out.file); ",
 			"}"
         ],
         
@@ -64,12 +69,13 @@
     "views": {
         "params":
         [
-            "<input type=\"hidden\" name=\"field\" id=\"field\" value='test'/><br>",
             "<label>Thumbnails or originals</label> ",
-            "<select name='filesize'> ",
+            "<select id='IA_download_filesize' name='filesize'> ",
             "    <option value='thumb' selected='selected'>thumbnails</option> ",
             "    <option value='original'>original</option>",
             "</select> ",
+            "<label>Field to write download info (path etc.)?</label> ",
+            "<input name='out_field' id='IA_download_out_field' value='downloaded_thumb' />",
             "<label>How to name files?</label> ",
             "<select name='filename_type'> ",
             "    <option value='original' selected='selected'>use original</option> ",
@@ -85,7 +91,8 @@
             "    <option>document counter</option> ",
             "    <option>no counter</option>",
             "</select> ",
-            "<br>*) using document counter prevents duplicate file names"
+            "<br>*) using document counter prevents duplicate file names",
+            "<script>$('#IA_download_filesize').change(function() {$('#IA_download_out_field').val('downloaded_' + $(this).val());});</script>"
         ],
         "settings": 
         [

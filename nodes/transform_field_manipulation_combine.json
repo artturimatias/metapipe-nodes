@@ -1,18 +1,18 @@
 {
-	"nodeid": "transform_wikimedia_commons_pagename",
-	"title": "Create commons pagename",
+	"nodeid": "transform_field_manipulation_combine",
+	"title": "Combine fields",
 	"type": "transform",
-	"subtype": "wikimedia",
-	"description": "Create commons page title",
+	"subtype": "field manipulation",
+	"description": "Combine fields with arbitrary strings",
 	"scripts": {
 		"hello":
 		[
-			"out.say('news', 'You added a page name node'); ",
+			"out.say('news', 'You added a combine node'); ",
 			"/* set output field */",
 			"context.node.out_field = context.node.params.out_field; "
 		],
 		
-        "bye": "out.say('news', 'Deleted page name node. Bye!'); ",
+        "bye": "out.say('news', 'Deleted combine node. Bye!'); ",
         
         "init":
         [
@@ -21,20 +21,21 @@
 		
 		"run": 
 		[
-
+			"var get = context.get; ",
+			"var doc = context.doc; ",
             "var settings = context.node.settings; ",
 			"var arr = []; ",
 			"arr.push(settings.prefix); ",
-            "arr.push(context.doc[settings.field1]); ",
+            "arr.push(get(doc, settings.field1)); ",
 			"arr.push(settings.after_field1); ",
-            "arr.push(context.doc[settings.field2]); ",
+            "arr.push(get(doc, settings.field2)); ",
 			"arr.push(settings.after_field2); ",
-            "arr.push(context.doc[settings.field3]); ",
+            "arr.push(get(doc, settings.field3)); ",
 			"arr.push(settings.suffix); ",
 			"out.value = arr.join(''); "
 		],
 		
-		"finish": "out.say('finish', 'Commons names created done!');",
+		"finish": "out.say('finish', 'Fields combined to ' +context.node.out_field+ '!');",
 		
 		"view":
 		[    
@@ -63,7 +64,11 @@
 	},
 	
 	"views": {
-		"params": "<label>where to save page title?</label> <input name='out_field'/ value='commons_title'/>",
+		"params": [
+			"<label>description</label> <input name='title' />",
+			"<label>where to save page title?</label> <input name='out_field'/ value='combined'/>"
+		],
+		
 		"settings":
 		[
 			"<label>select fields:</label>",

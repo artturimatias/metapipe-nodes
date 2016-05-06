@@ -15,7 +15,7 @@
 		
         "bye": "out.say('finish', 'Deleted commons node!'); ",
         
-        "init": "out.say('progress', 'Starting to upload URLs...'); ",
+        "init": "out.say('progress', 'Starting to upload URLs...'); context.counter = 0; ",
         
         "login": 
         [
@@ -44,19 +44,26 @@
             "var title = context.doc[context.node.params.field]; ",
             "var source = context.doc[context.node.params.location]; ",
             
-            "var splitted = source.split('/'); ",
-            "var filename = splitted[splitted.length -1]; ",
-            "var s = filename.split('.'); ", 
-            "var ext = s[s.length - 1]; ",
-            "out.say('progress', title); ",
+            "/* if commons url is set, then skip that record */",
+            "if(context.get(context.doc, context.node.params.out_field) != '') { ",
+            "    out.say('progress', 'skipping'); ",
+            "    context.skip = true; ",
             
-            "if(title[title.length - 1] != '.') ",
-            "    out.title = title + '.' + ext; ",
-            "else",
-            "    out.title = title + ext; ",
+            "} else {",
+            "    var splitted = source.split('/'); ",
+            "    var filename = splitted[splitted.length -1]; ",
+            "    var s = filename.split('.'); ", 
+            "    var ext = s[s.length - 1]; ",
+            "    out.say('progress', title); ",
             
-            "out.filename = source; ",
-            "out.wikitext = context.doc[context.node.params.wikitext]; "
+            "    if(title[title.length - 1] != '.') ",
+            "        out.title = title + '.' + ext; ",
+            "    else",
+            "        out.title = title + ext; ",
+            
+            "    out.filename = source; ",
+            "    out.wikitext = context.doc[context.node.params.wikitext]; ",
+            "}"
             ],        
         
         "run":
@@ -66,6 +73,14 @@
             "    out.value = context.error; ",
             "} else { ",
             "    out.value = context.data.imageinfo.descriptionurl; ",
+            "}",
+            
+            "context.counter++; ",
+            
+            "/* check if user limit was reached */ ",
+            "if(parseInt(context.node.settings.limit) <= context.counter) { ",
+            "    out.say('finish', 'All ' + context.node.settings.limit + ' done'); ",
+            "    context.abort = true; ",
             "}"
         ],
             
@@ -89,7 +104,9 @@
             "<select name='api'>",
             "    <option value='0'>beta</option>",
             "    <option value='1'>production</option>",
-            "</select>"
+            "</select>",
+            "<label>How many to upload? (leave blank for all)</label>",
+            "<input name='limit' />"
            
         ]
     }

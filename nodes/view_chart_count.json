@@ -1,0 +1,71 @@
+{
+	"nodeid": "view_chart_count",
+	"type": "view",
+	"subtype": "chart",
+	"title": "Count chart",
+	"description": "Count records by certain field and draw chart",
+
+	"scripts": {
+		"hello": 
+		[
+			"out.say('news', 'You added a query node');"
+		],
+		
+        "bye": "out.say('news', 'Deleted query node. Bye!'); ",
+        
+        "view": 
+        [
+            "var x = context.node.params.x;",
+            "var y = context.node.params.y;",
+            "var coll = context.node.collection;",
+            "var url = 'http://localhost:3000/get/collection/' + coll + '?skip=0&sort='+x+'&limit=0&fields='+x; ",
+            "var html = '<html><head>\\n'; ",
+            "html += '<script type=\"text/javascript\" src=\"../../js/jquery-2.1.1.min.js\"></script>\\n'; ",
+            "html += '<script type=\"text/javascript\" src=\"../../js/flot/jquery.flot.js\"></script>\\n'; ",
+            "html += '<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/metapipe.css\" />\\n'; ",
+            "html += '</head><body>\\n'; ",
+            "html += '<div class=\"chart_container\"><div id=\"chart\"></div></div>\\n'; ",
+            "html += '<div id=\"info\"><h2>'+x+'</h2></div>\\n'; ",
+            "html += '<div id=\"count\"></div>\\n'; ",
+            "html += '<script>\\n'; ",
+            "html += '$.getJSON(\"'+url+'\", function(data) {\\n'; ",
+            "html += '  var d = [];\\n'; ",
+            "html += '  var latest = null;\\n'; ",
+            "html += '  var counter = 0;\\n'; ",
+            "html += '  for(var i=0; i<data.length; i++) {\\n'; ",
+            "html += '      var x_val = Number(data[i][\"' + x + '\"]); \\n'; ",
+            "html += '      if(x_val === latest) {\\n'; ",
+            "html += '          counter++; \\n'; ",
+            "html += '      } else {\\n'; ",
+            "html += '          if(latest != null) \\n'; ",
+            "html += '              d.push([latest, counter]); \\n'; ",
+            "html += '          latest = x_val; \\n'; ",
+            "html += '          counter = 1;\\n' ; ",
+            "html += '          '; ",
+            "html += '          '; ",
+            "html += '      }\\n'; ",
+            "html += '  }\\n'; ",
+            "html += '  var max_x = d[d.length - 1][0];\\n'; ",
+            "html += '  if(d[0][0] === 0) d.splice(0,1);\\n'; ",
+            "html += '  console.log(d);\\n'; ",
+            "html += '  $(\"#count\").text(data.length);\\n'; ",
+            "html += '  $.plot(\"#chart\", [d]);\\n'; ",
+            "html += '});\\n'; ",
+            "html += ''; ",
+            "html += '</script>\\n'; ",
+            "html += '</body></html>'; ",
+            "out.html = html;"
+        ]
+	},
+	
+	"views": {
+		"params": [
+			"<label>x</label>",
+			"<input class='dynamic_field' name='x' /> ",
+			"<label>y</label>",
+			"<input class='dynamic_field' name='y' /> "
+		],
+		"settings":"no settings"
+	}
+
+}

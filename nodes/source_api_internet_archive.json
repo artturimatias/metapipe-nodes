@@ -22,25 +22,27 @@
             "out.say ('news', 'starting to fetch query ' + out.url);",
             
             "if(context.node.settings.sample_to != null) ",
-            "    context.node.sample_to = parseInt(context.node.settings.sample_to); "
+            "    context.node.sample_to = parseInt(context.node.settings.sample_to); ",
+            "else",
+            "    context.node.sample_to = 9999999999; "
         ],
         
         "run":
         [
-			"out.say('news', context.data); ",
 			"if (context.data.responseHeader) {",
 			"    var numFound = parseInt(context.data.response.numFound, 10);",
 			"    var start = parseInt(context.data.response.start, 10);", 
+			"    var totalPages = Math.ceil(numFound/context.node.params.docs_per_page); ", 
 			"    out.value = context.data.response.docs; ",
 			
-            "   out.say ('progress', 'working on document ' + start + '/' + numFound);",
-            "   var currentPage = start/out.docs_per_page + 1; ", 
+            "   var currentPage = start/context.node.params.docs_per_page + 1; ", 
+            "   out.say ('progress', 'working on page ' + currentPage + '/' + totalPages);",
+            "   out.say ('progress', context.query_url);",
 
             "   if(start < numFound) {",
             "        /* stop if sample is set and count is bigger than sample */",
-            "       if(context.node.sample_to) {",
-            "           if(currentPage > context.node.sample_to)",
-            "              out.url = ''; ",
+            "       if(currentPage >= context.node.sample_to) {",
+            "          out.url = ''; ",
             "       } else {",
             "           currentPage++; ",
             "           out.url = context.query_url + '&page=' + currentPage; ",

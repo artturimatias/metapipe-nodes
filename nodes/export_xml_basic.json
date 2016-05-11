@@ -10,38 +10,49 @@
         "hello": "out.say('news', 'You added a XML export node'); context.node.title = context.node.params.file; ",
         "bye": "out.say('news', 'Deleted XML export node. Bye!'); ",
         "init":"out.value = '<root>\\n';",
-        "run": [
-                "var str = '';",
-                "var record_tag = context.node.settings.root;",
-                "var tag_open = ' <' + record_tag + '>\\n';",
-                "var tag_close = ' </' + record_tag + '>\\n';",
-                "for(f in context.doc) {",
-                "   var tag = context.node.settings['_mapkey_' + f];",
-                "   if(tag != '') {",
-                "       if (context.doc[f].constructor.name === 'Array') {",
-                "           for (var i = 0; i < context.doc[f].length; i++ ) { ",
-                "               str += '    <'+tag+'>' + context.doc[f][i] + '</'+tag+'>\\n';",
-                "           }",
-                "       } else {",  
-                "           str += '    <'+tag+'>' + context.doc[f] + '</'+tag+'>\\n'",
-                "       }",
-                "   }",
-                "};",
-                "",
+        "run": 
+        [
+            "var str = '';",
+            "var record_tag = context.node.settings.root;",
+            "var tag_open = ' <' + record_tag + '>\\n';",
+            "var tag_close = ' </' + record_tag + '>\\n';",
+            "for(f in context.doc) {",
+            "   var tag = context.node.settings['_mapkey_' + f];",
+            "   if(tag != '') {",
+            "       if (context.doc[f].constructor.name === 'Array') {",
+            "           for (var i = 0; i < context.doc[f].length; i++ ) { ",
+            "               str += '    <'+tag+'>' + context.doc[f][i] + '</'+tag+'>\\n';",
+            "           }",
+            "       } else {",  
+            "           str += '    <'+tag+'>' + context.doc[f] + '</'+tag+'>\\n'",
+            "       }",
+            "   }",
+            "};",
+            "",
 
 
-                "if(parseInt(context.count) % 100 == 0) ",
-                "    out.say('progress', context.node.type.toUpperCase() + ': processed ' + context.count + '/' + context.doc_count);",
-                "",
-                "out.value = tag_open + str + tag_close;"
-                ],
-        "finish":[
-                    "out.value = '</root>';",
-                    "out.say('finish','Export done to \"' + context.node.dir + '/' + context.node.params.file + '\"');"
-                    ]
+            "if(parseInt(context.count) % 100 == 0) ",
+            "    out.say('progress', context.node.type.toUpperCase() + ': processed ' + context.count + '/' + context.doc_count);",
+            "",
+            "out.value = tag_open + str + tag_close;"
+        ],
+        
+        "finish":
+        [
+            "out.value = '</root>';",
+            "out.say('finish','Export done to \"' + context.node.dir + '/' + context.node.params.file + '\"');"
+        ],
+        
+        "view": 
+        [
+            "var c = context; ",
+            "out.html = '<h2>I (export node) worked hard</h2>'; ",
+            "out.html += '<a href=\"/export/'+c.node.project_dir + '/' + c.node.number + '_' + c.node.nodeid + '/' + c.node.params.file + '\">download result</a>'; "
+        ]
     },
     
     "views": {
+
         "params":"<label>file name</label><input name=\"file\"/>",
         "settings":[
                     "<label>record element name </label><input name=\"root\" value=\"record\"/>",

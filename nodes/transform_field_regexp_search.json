@@ -22,10 +22,14 @@
 		
 		"run": 
 		[
-			"var reg = new RegExp(context.node.settings.regexp, context.node.settings.flags); ",
+			"var reg = new RegExp(context.node.settings.regexp); ",
             "var val = context.doc[context.node.params.in_field]; ",
             "var result = reg.exec(val); ",
-			"out.value = result; "
+            "if(result) {",
+            "   out.console.log('length:', result.length); ",
+            "   out.console.log('data:', result[result.length-1]); ",
+			"   out.value = String(result[result.length-1]); ",
+            "}"
 		],
 		
 		"finish": "out.say('finish', 'REGEXP done!');"

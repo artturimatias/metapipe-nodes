@@ -20,7 +20,7 @@
 		[
 			"var base_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.getSizes';",
 			"var format = '&format=json&nojsoncallback=?';",
-			"out.pre_value = base_url + '&photo_id=' + context.doc['id'] + format + '&api_key=' + context.node.settings.apikey"
+			"out.url = base_url + '&photo_id=' + context.doc['id'] + format + '&api_key=' + context.node.settings.apikey"
 		],
 		
 		"run":[

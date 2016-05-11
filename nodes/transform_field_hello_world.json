@@ -1,0 +1,33 @@
+{
+	"nodeid": "transform_field_hello_world",
+	"title": "Hello world",
+	"type": "transform",
+	"subtype": "string manipulation",
+	"description": "My first node",
+	"scripts": {
+	
+		"hello": "out.say('news', 'You added a HELLO WORLD node'); ",
+		
+        "bye": "out.say('news', 'Deleted HELLO WORLD node. Bye!'); ",
+        
+        "init": "out.say('progress', 'Starting hello...'); ", 
+		
+		"run": 
+		[
+			"out.value = 'Hello World!'; "
+		],
+		
+		"finish": "out.say('finish', 'Hello done!');"
+	},
+	
+	"views": {
+		"params":
+		[
+			"<label>output field</label> <input name='out_field'/ value='hello_world' />"
+		],
+        "settings":
+        [
+			"no settings"
+        ]
+	}
+}

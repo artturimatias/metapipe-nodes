@@ -1,8 +1,58 @@
 # metapipe-nodes
 
+## Writing your own nodes
+
+Nodes are the  building blocks of data manipulation in GLAMpipe. 
+
+### "Hello world" transform node 
+This node will create a new field to all records in the collection and it writes "Hello world" in that field.
+
+The node starts with nodeid, which must be unique. Type and subtype defines how node is executed and where it is displayed when creating new nodes.
+
+	"nodeid": "transform_field_hello_world",
+	"title": "Hello world",
+	"type": "transform",
+	"subtype": "string manipulation",
+	"description": "My first node",
+	"scripts": {
+
+Scripts part is where the actual code is:
+
+First we say "hello" to user when a node is added to project:
+
+	"hello": "out.say('news', 'You added a HELLO WORLD node'); ",
+	
+And when if user deletes our node, then we say "bye":
+
+	"bye": "out.say('news', 'Deleted HELLO WORLD node. Bye!'); ",
+
+asd
+
+	"init": "out.say('progress', 'Starting hello...'); ", 
+	"run": 
+		[
+			"out.value = 'Hello World!'; "
+		],
+		
+	"finish": "out.say('finish', 'Hello done!');"
+	},
+	
+Views include html for parameters (for creating node), settings (for running node) and views (for showing data)
+
+	"views": {
+		"params":
+		[
+			"<label>output field</label> <input name='out_field'/ value='hello_world' />"
+		],
+        "settings":
+        [
+			"no settings"
+        ]
+	}
+
 
 ## Scripts
-Metapipe nodes are JavaScript objects that contain scripts. 
+GLAMpipe nodes are JavaScript objects that contain scripts. 
 
 ### hello
 Script is called *before* node is inserted to database. Therefore it is possible to set for example node's title in this stage .
@@ -19,12 +69,6 @@ This is called when node is deleted. Chanche say by to the user.
 ###login
 Upload nodes must provide login script. It will pass required login information to Metapipe (usually username, passwd and url).
 
-###url
-Lookup nodes must provide request url by setting **out.url**.
-
-    var base_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.getSizes';
-    var format = '&format=json&nojsoncallback=?';
-    out.url = base_url + '&photo_id=' + context.doc[context.node.params.field] + format + '&api_key=' + context.node.settings.apikey
 
 ###init
 Init script is called once when running node.
@@ -32,6 +76,13 @@ Init script is called once when running node.
     out.say('progress', 'Starting replacing..');
     /* set output field */
     out.field = context.node.params.out_field; 
+
+###pre_run
+pre_run is run before actual run script. Lookup nodes, for example, sets the **out.url** here..
+
+    var base_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.getSizes';
+    var format = '&format=json&nojsoncallback=?';
+    out.url = base_url + '&photo_id=' + context.doc[context.node.params.field] + format + '&api_key=' + context.node.settings.apikey
 
 ###run
 Run script is executed once per record (excluding source nodes). By setting **out.value** node can save the result of its operation.

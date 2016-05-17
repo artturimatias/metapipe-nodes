@@ -9,7 +9,7 @@
 		[ 
 			"out.say('news', 'You added a Extract node'); ",
 			"/* set output field */",
-			"context.node.out_field = context.node.params.in_field + '_' + context.node.params.suffix; "
+			"context.node.out_field = context.node.params.out_field; "
 		],
 		
         "bye": "out.say('news', 'Deleted Split node. Bye!'); ",
@@ -23,11 +23,11 @@
 		[
 			"var reg = new RegExp('[^ ]*'); ",
             "var val = context.doc[context.node.params.in_field]; ",
-			"var splitted = val.split(context.node.settings.end); ",
-			"if (context.node.settings.start_end == 'start') { ",
-			"    out.value = splitted[0]; ",
-			"} else { ",
-			"    out.value = splitted[splitted.length -1]; ",
+			"var splitted = val.split(context.node.settings.from); ",
+            "if(splitted.length > 1) {",
+            "   var end = splitted[1].split(context.node.settings.end); ",
+            "   if(end.length > 1) ",
+            "       out.value = end[0]; ",
 			"}"
 		],
 		
@@ -39,16 +39,12 @@
 		[
 			"<label>Note title</label> <input name='title'/>",
 			"<label>in field:</label> <input class='dynamic_field' name='in_field'/>",
-			"<label>output field suffix:</label> <input name='suffix'/ value='_extracted'>"
+			"<label>output field suffix:</label> <input name='out_field'/ value='extracted'>"
 		],
         "settings":
         [
-			"",
-            "<label>direction</label>",
-            "<select name='start_end'>",
-            "    <option value='start'>from start of the line</option>",
-            "    <option value='end'>from end of the line</option>",
-            "</select>",
+            "<label>read from this sequence</label>",
+            "<input name='from'/>",
             "<label>read until this or these characters appear</label>",
             "<input name='end'/>"
         ]

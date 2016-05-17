@@ -19,7 +19,7 @@
             "for(f in context.doc) {",
             "   var tag = context.node.settings['_mapkey_' + f];",
             "   if(tag != '') {",
-            "       if (context.doc[f].constructor.name === 'Array') {",
+            "       if (context.doc[f] !== null && context.doc[f].constructor.name === 'Array') {",
             "           for (var i = 0; i < context.doc[f].length; i++ ) { ",
             "               str += '    <'+tag+'>' + context.doc[f][i] + '</'+tag+'>\\n';",
             "           }",
@@ -68,7 +68,7 @@
                     "           var rec=data[0];",
                     "           var table=$('<table><th>current name</th><th>new name</th></table>');",
                     "           for(var f in rec){",
-                    "               if(typeof rec[f] === \"object\" && f != \"_id\") {",
+                    "               if(rec[f] !== null && typeof rec[f] === \"object\" && f != \"_id\") {",
                     "                   var field=$('<tr><td>' +f+ '</td><td><input name=\"_mapkey_'+f+'\"/>A</td></tr>');",
                     "               } else {",
                     "                   var field=$('<tr><td>' +f+ '</td><td><input name=\"_mapkey_'+f+'\"/></td></tr>');",
@@ -85,7 +85,7 @@
                     "           $( this ).find(\"input\").val(field);",
                     "       });",
                     "   });",
-                    "   </script>"
+                    "</script>"
                     ]
     }
 }

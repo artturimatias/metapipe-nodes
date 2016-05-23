@@ -2,8 +2,9 @@
 	"nodeid": "source_file_upload",
 	"type": "source",
 	"subtype": "file",
-	"title": "Upload",
-	"description": "import file (xml, csv, tsv or json)",
+	"title": "Upload csv",
+    "status": "usable",
+	"description": "import file csv or tsv file",
 
 	"scripts": {
 		"hello": 

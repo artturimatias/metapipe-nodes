@@ -3,6 +3,7 @@
 	"title": "Split",
 	"type": "transform",
 	"subtype": "string manipulation",
+    "status": "usable",
 	"description": "Split field to an array.",
 	"scripts": {
 	
@@ -23,7 +24,10 @@
 		"run": 
 		[
             "var val = context.doc[context.node.params.in_field]; ",
-			"out.value = val.split(context.node.settings.separator);"
+			"var splitted = val.split(context.node.settings.separator);",
+            "for (var i = 0; i < splitted.length; i++ ) ",
+            "   splitted[i] = splitted[i].trim(); ",
+            "out.value = splitted; "
 		],
 		
 		"finish": "out.say('finish', 'Split done!');"
@@ -35,6 +39,6 @@
 			"<label>in field:</label> <input class='dynamic_field' name='in_field'/>",
 			"<label>output field suffix:</label> <input name='suffix'/ value='_splitted'>"
 		],
-		"settings":"<label>separator:</label> <input name='separator'/><div>options</div><input type='checkbox' name='trim' value='trim' checked /> trim result"
+		"settings":"<label>separator:</label> <input name='separator'/><div>options</div>"
 	}
 }

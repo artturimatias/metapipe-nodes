@@ -3,6 +3,7 @@
     "title": "Map Warper",
     "type": "source",
     "subtype": "API",
+    "status": "usable",
     "description": "Fetch all maps (data only, not images) from <a target=\"_blank\" href=\"https://github.com/timwaters/mapwarper\">Map Warper</a> instance.",
 
     "scripts": {
@@ -41,7 +42,7 @@
             "   }",
             "    /* stop if sample is set and current page is bigger than sample */",
             "   if(context.node.sample_to) {",
-            "       if(current_page > context.node.sample_to)",
+            "       if(current_page >= context.node.sample_to)",
             "          out.url = ''; ",
             "   }",
             "}"

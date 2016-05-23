@@ -15,45 +15,19 @@
         
         "view": 
         [
-            "var x = context.node.params.x;",
+            "var x = context.node.params.x ;",
             "var y = context.node.params.y;",
             "var coll = context.node.collection;",
             "var url = 'http://localhost:3000/get/collection/' + coll + '?skip=0&sort='+x+'&limit=0&fields='+x; ",
-            "var html = '<html><head>\\n'; ",
-            "html += '<script type=\"text/javascript\" src=\"../../js/jquery-2.1.1.min.js\"></script>\\n'; ",
-            "html += '<script type=\"text/javascript\" src=\"../../js/flot/jquery.flot.js\"></script>\\n'; ",
-            "html += '<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/metapipe.css\" />\\n'; ",
-            "html += '</head><body>\\n'; ",
-            "html += '<div class=\"chart_container\"><div id=\"chart\"></div></div>\\n'; ",
-            "html += '<div id=\"info\"><h2>'+x+'</h2></div>\\n'; ",
-            "html += '<div id=\"count\"></div>\\n'; ",
-            "html += '<script>\\n'; ",
-            "html += '$.getJSON(\"'+url+'\", function(data) {\\n'; ",
-            "html += '  var d = [];\\n'; ",
-            "html += '  var latest = null;\\n'; ",
-            "html += '  var counter = 0;\\n'; ",
-            "html += '  for(var i=0; i<data.length; i++) {\\n'; ",
-            "html += '      var x_val = Number(data[i][\"' + x + '\"]); \\n'; ",
-            "html += '      if(x_val === latest) {\\n'; ",
-            "html += '          counter++; \\n'; ",
-            "html += '      } else {\\n'; ",
-            "html += '          if(latest != null) \\n'; ",
-            "html += '              d.push([latest, counter]); \\n'; ",
-            "html += '          latest = x_val; \\n'; ",
-            "html += '          counter = 1;\\n' ; ",
-            "html += '          '; ",
-            "html += '          '; ",
-            "html += '      }\\n'; ",
-            "html += '  }\\n'; ",
-            "html += '  var max_x = d[d.length - 1][0];\\n'; ",
-            "html += '  if(d[0][0] === 0) d.splice(0,1);\\n'; ",
-            "html += '  console.log(d);\\n'; ",
-            "html += '  $(\"#count\").text(data.length);\\n'; ",
-            "html += '  $.plot(\"#chart\", [d]);\\n'; ",
-            "html += '});\\n'; ",
-            "html += ''; ",
-            "html += '</script>\\n'; ",
-            "html += '</body></html>'; ",
+            "var html = context.node.storage.html.join('\\n'); ",
+            "var script = '<script>'; ",
+            "script += 'var x = \"' + context.node.params.x + '\";\\n'; ",
+            "script += 'var y = \"' + context.node.params.y + '\";\\n'; ",
+            "script += 'var coll= \"' + context.node.params.y + '\";\\n'; ",
+            "script += 'var url = \"http://localhost:3000/get/collection/' + coll + '?skip=0&sort='+x+'&limit=0&fields=' + x + '\";\\n';  ",
+            "script += context.node.storage.script.join('\\n'); ",
+            "script += '</script>'; ",
+            "html = html.replace('[[script]]', script); ",
             "out.html = html;"
         ]
 	},
@@ -66,6 +40,49 @@
 			"<input class='dynamic_field' name='y' /> "
 		],
 		"settings":"no settings"
-	}
+	},
+    
+    "storage": {
+        "html":
+        [
+            "<html><head> ",
+            "<script type=\"text/javascript\" src=\"../../js/jquery-2.1.1.min.js\"></script> ",
+            "<script type=\"text/javascript\" src=\"../../js/flot/jquery.flot.js\"></script> ",
+            "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/metapipe.css\" /> ",
+            "</head><body> ",
+            "<div class=\"chart_container\"><div id=\"chart\"></div></div> ",
+            "<div id=\"info\"><h2>[[x]]</h2></div> ",
+            "<div id=\"count\"></div> ",
+            
+            "[[script]] ",
+            
+            "</body></html> "
+        ],
+        "script": 
+        [
+            "$.getJSON( url, function(data) { ",
+            "  var d = []; ",
+            "  var latest = null; ",
+            "  var counter = 0; ",
+            "  for(var i=0; i<data.length; i++) { ",
+            "      var x_val = data[i][x];  ",
+            "      if(x_val === latest) { ",
+            "          counter++;  ",
+            "      } else { ",
+            "          if(latest != null)  ",
+            "              d.push([latest, counter]);  ",
+            "          latest = x_val;  ",
+            "          counter = 1; ",
+            "      } ",
+            "  } ",
+            "  var max_x = d[d.length - 1][0]; ",
+            "  if(d[0][0] === 0) d.splice(0,1); ",
+            "  console.log(d); ",
+            "  $('#count').text(data.length); ",
+            "  $.plot('#chart', [d]); ",
+            "}); "
+        ]
+    
+    }
 
 }

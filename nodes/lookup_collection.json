@@ -1,9 +1,9 @@
 {
-	"nodeid": "lookup_collection_by_ids",
-	"title": "Collection lookup by ID",
+	"nodeid": "lookup_collection",
+	"title": "Collection lookup",
 	"type": "lookup",
 	"subtype": "collection",
-	"description": "Collection lookup for clustered collection. Lookup is based on IDs in original collection.",
+	"description": "Collection lookup. Suitable for example term lookups.",
 
 	"scripts": {
 		"hello": [

@@ -1,0 +1,88 @@
+{
+    "nodeid": "source_api_finna",
+    "title": "FINNA",
+    "type": "source",
+    "subtype": "API",
+    "status": "test",
+    "description": "Fetch online materials data from FINNA. Fetches only first page!",
+
+    "scripts": {
+        "hello": 
+        [
+			"out.say('news', '<h2>Hello, You just added a FINNA node!</h2>'); "
+        ],
+        
+        "bye": "out.say('news', 'Deleted FINNA source node!  Bye!'); ",
+        
+        "init": 
+        [
+            "var url = 'https://api.finna.fi/v1/search?'; ",
+            "var search = context.node.settings.search; ",
+            "var format = '&filter[]=' + context.node.settings.format; ", 
+            "var license = '&filter[]=' + context.node.settings.license; ", 
+            "url = url + 'lookfor='+search+'&filter[]=online_boolean:1' + format + license;",
+            "out.say('progress', url);",
+            "out.url = url; "
+            
+
+        ],
+        
+        "run":
+        [
+			"if(context.response.statusCode == 200) {",
+            "   var imgBase = 'https://api.finna.fi'; ",
+            "   var result = [];", 
+			"   var numFound = parseInt(context.data.resultCount, 10);",
+            "   var recs = context.data.records; ",
+            "   for(var i = 0; i < recs.length; i++) {",
+            "       if(recs[i].images) ",
+            "           recs[i].image_url = imgBase + recs[i].images[0]; ",
+            
+            "       if (!recs[i].subjects) ",
+            "           recs[i].subjects = []; ",
+            
+            "       if(recs[i].nonPresenterAuthors && recs[i].nonPresenterAuthors.constructor.name == \"Array\") {",
+            "           var authors = recs[i].nonPresenterAuthors; ",
+            "           var authorArr = []; ",
+            "           for(var j = 0; j < authors.length; j++) {",
+            "               authorArr.push(authors[j].name); ",
+            "           }",
+            "       }",
+            "       recs[i].authors = authorArr; ",
+            "   }",
+            "",
+            "   out.say('progress', '<h2>Found ' + numFound + ' records!</h2>'); ",
+            "   out.value = context.data.records; ",
+			"} else {",
+			"    out.say('error', 'Your query failed! Please check query'); ",
+            "    out.value = null; ",
+			"}"
+        ],
+        "finish":"out.say('finish', 'Tiedot haettu FINNAsta!'); "
+    },
+    
+    "views": {
+        "params":[
+                    "no params"
+                 ],
+                 
+		"settings":
+		[
+                    "<label>Sanahaku</label>",
+                    "<input name='search'>Sanahaku</input>",
+                    "<label>Valitse aineistolaji</label>",
+                    "<select name=\"format\">",
+                    "    <option value='format:0/Image/'>Image</option>",
+                    "    <option value='format:0/Book/'>Book</option>",
+                    "    <option value='format:0/Thesis/'>Thesis</option>",
+                    "</select>",
+                    "<label>Valitse lisenssi</label>",
+                    "<select name=\"license\">",
+                    "    <option value='usage_rights_str_mv:usage_B'>Saa muokata, myös kaupallinen</option>",
+                    "    <option value='usage_rights_str_mv:usage_C'>Muutoksia tekemättä, myös kaupallinen</option>",
+                    "    <option value='usage_rights_str_mv:usage_D'>Saa muokata, ei-kaupallinen</option>",
+                    "</select>"
+		]
+    }
+
+}

@@ -3,7 +3,7 @@
 	"title": "Combine fields",
 	"type": "transform",
 	"subtype": "field manipulation",
-	"description": "Combine fields with arbitrary strings",
+	"description": "Combine string fields with arbitrary strings",
 	"scripts": {
 		"hello":
 		[
@@ -35,32 +35,9 @@
 			"out.value = arr.join(''); "
 		],
 		
-		"finish": "out.say('finish', 'Fields combined to ' +context.node.out_field+ '!');",
+		"finish": "out.say('finish', 'Fields combined to ' +context.node.out_field+ '!');"
 		
-		"view":
-		[    
-			"/* create view based on settings user defined */",
-			"var node = context.node.settings; ",
-			"var html = '<h2>Here are your page names for wikimedia commons!</h2>'; ",
-			"html += '<div><table><thead>'; ",
-			"html += '<tr>'; ",
-			"html += '  <th id=\"' + context.node.params.out_field +'\" >'+context.node.params.out_field+'</th>'; ",
-			"html += '  <th id=\"' + node.field1 +'\" >'+node.field1+'</th>'; ",
-			"html += '  <th id=\"' + node.field2 +'\" >'+node.field2+'</th>'; ",
-			"html += '  <th id=\"' + node.field3 +'\" >'+node.field3+'</th>'; ",
-			"html += '</tr></thead>'; ",
-			"html += '<tbody data-bind=\"foreach: collection\">'; ",
-			"html += '  <tr>'; ",
-			"html += '    <td data-bind=\"text: ' + context.node.params.out_field + '\"></td>'; ",
-			"html += '    <td data-bind=\"text: ' + node.field1 + '\"></td>'; ",
-			"html += '    <td data-bind=\"text: ' + node.field2 + '\"></td>'; ",
-			"html += '    <td data-bind=\"text: ' + node.field3 + '\"></td>'; ",
-			"html += '    '; ",
-			"html += '  </tr>'; ",
-			"html += '</tbody>'; ",
-			"html += '</table></div>'; ",
-			"out.view = html; "
-		]
+
 	},
 	
 	"views": {

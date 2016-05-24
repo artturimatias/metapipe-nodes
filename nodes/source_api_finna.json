@@ -16,24 +16,33 @@
         
         "init": 
         [
+            "var c = context; ",
             "var url = 'https://api.finna.fi/v1/search?'; ",
             "var search = context.node.settings.search; ",
             "var format = '&filter[]=' + context.node.settings.format; ", 
             "var license = '&filter[]=' + context.node.settings.license; ", 
-            "url = url + 'lookfor='+search+'&filter[]=online_boolean:1' + format + license;",
-            "out.say('progress', url);",
-            "out.url = url; "
+            "c.var = {}; ",
+            "c.var.page = 1; ",
+            "c.var.limit = 20; ",
+            "c.var.url = url + 'lookfor='+search+'&limit='+c.var.limit+'&filter[]=online_boolean:1' + format + license;",
+            "out.say('progress', c.var.url);",
+            "out.url = c.var.url + '&page=' + c.var.page; "
             
 
         ],
         
         "run":
         [
+            "var c = context; ",
 			"if(context.response.statusCode == 200) {",
+            "   out.say('progress', 'Fetching page ' + c.var.page + 'of '+pageCount+ ' Total: ' + numFound); ",
             "   var imgBase = 'https://api.finna.fi'; ",
             "   var result = [];", 
 			"   var numFound = parseInt(context.data.resultCount, 10);",
+            "   var pageCount = Math.ceil(numFound/c.var.limit)  ; ",
+            "   c.var.page++; ",
             "   var recs = context.data.records; ",
+            "   /* we do some data cleaning here */",
             "   for(var i = 0; i < recs.length; i++) {",
             "       if(recs[i].images) ",
             "           recs[i].image_url = imgBase + recs[i].images[0]; ",
@@ -51,8 +60,10 @@
             "       recs[i].authors = authorArr; ",
             "   }",
             "",
-            "   out.say('progress', '<h2>Found ' + numFound + ' records!</h2>'); ",
             "   out.value = context.data.records; ",
+            "   /* check if there is any data left onf server */",
+            "  if(c.var.page <= pageCount) ",
+            "       out.url = c.var.url + '&page=' + c.var.page; ",
 			"} else {",
 			"    out.say('error', 'Your query failed! Please check query'); ",
             "    out.value = null; ",

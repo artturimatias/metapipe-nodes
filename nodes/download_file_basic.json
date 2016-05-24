@@ -7,19 +7,72 @@
 
 
     "scripts": {
-        "hello": "out.say('news', 'You added a download node'); ",
+		"hello": 
+		[
+			"out.say('news', 'You added a download node'); ",
+			"context.node.out_field = context.node.params.out_field; "
+		],
+        
         "bye": "out.say('news', 'Deleted donwload node. Downloaded files will remain. Bye!'); ",
-        "init":"out.say('progress', 'Starting downloads...'); ",
+        
+        "init":
+        [
+            "context.node.out_field  = context.node.params.in_field + '_download'; ",
+            "context.base_url = context.node.params.base_url; ",
+            "context.in_field = context.node.params.in_field; ",
+            "    /* lets make counter for succesful downloads */",
+            "context.node.download_counter = 0; ",
+            "out.say('progress', 'I have ' + context.doc_count + ' images to download!'); "
+        ],
+        
+        "pre_run": 
+        [
+
+			"out.url = context.base_url + context.doc[context.in_field]; ",
+            "    /* create file name */",
+			"out.file = context.count + '.jpg'; ",
+
+			"if(out.url == null) ",
+			"    out.say('progress', 'URL not found!');",
+			"else ",
+			"    out.say('progress', 'starting to download:' + out.url); "
+        ],
+        
         "run": [
-                "out.value = context.doc[context.node.params.field]",
-                "out.say('progress', context.doc[context.node.params.field])"
+                "if(context.error == null) {",
+                "   out.value = context.path.join(context.node.dir, out.file); ",
+                "   out.say('progress', 'server said: ' + context.response.statusCode); ",
+                "   context.node.download_counter++",
+                "} else ",
+                "   out.say('error', context.error); "
                 ],
-        "finish":"out.say('finish', 'Downloaded');"
+                
+        "finish":"out.say('finish', '<h2>Downloaded '+context.node.download_counter+' files!</h2>');"
     },
     
     "views": {
         "params":[
-                    "<label>input field</label><input name=\"field\"/>"
+                    "<label>From where? (url)</label>",
+                    "<input name='base_url' class='short_input'/> + ",
+                    "<input name='in_field' class='dynamic_field middle_input'/>",
+                    "<label>How to name files?</label> ",
+                    "<select id='download_node_filename' name='filename_type'> ",
+                    "    <option value='original' selected='selected'>use original</option> ",
+                    "    <option value='own'>make your own</option>",
+                    "</select> ",
+                    "<label class='hidden' style='display:none'>construct your own filename (not implemented)</label>",
+                    "<input name='file__1' class='short_input hidden'/> + ",
+                    "<input name='file__2' class='dynamic_field middle_input hidden' /><span class='hidden'> + </span><br>",
+                    "<input name='file__3' class='short_input hidden'/><span class='hidden'> + </span>",
+                    "<input name='file__4' class='dynamic_field middle_input hidden' /><span class='hidden'> + </span><br>",
+                    "<input name='file__5' class='short_input hidden'/><span class='hidden'> + * </span>",
+                    "<select name='counter' class='hidden'> ",
+                    "    <option>document counter</option> ",
+                    "    <option>no counter</option>",
+                    "</select> ",
+                    "<div class='hidden' style='display:none'>*) using document counter prevents duplicate file names</div>",
+                    "<script>$('#download_node_filename').change(function() {$('#node_creator .params .hidden').toggle(); });</script>"
+
                     ],
         "settings": [
                     "no settings"

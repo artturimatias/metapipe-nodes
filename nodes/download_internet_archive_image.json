@@ -17,7 +17,7 @@
         
         "init":
         [
-            "out.field = context.node.params.field + '_download'; ",
+            "context.node.out_field  = context.node.params.field + '_download'; ",
             "context.base_url = 'http://archive.org/download/'; ",
             "out.say('progress', 'I have ' + context.doc_count + ' images to download!'); "
         ],

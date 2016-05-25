@@ -21,7 +21,6 @@
 		
 		"run": 
 		[
-			"var reg = new RegExp('[^ ]*'); ",
             "var val = context.doc[context.node.params.in_field]; ",
 			"var splitted = val.split(context.node.settings.from); ",
             "if(splitted.length > 1) {",

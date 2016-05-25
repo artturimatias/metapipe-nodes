@@ -12,7 +12,8 @@
 		
 		"init":	[
 				"if(context.node.settings.apikey == '') { ",
-				"    out.say('error', 'You must give an API key!'); ",
+				"   out.say('error', 'You must give an API key!'); ",
+                "   context.init_error = 'API key missing'; ",
 				"} else {",
 				"    var base_url = 'https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos';",
 				"    var format = '&extras=license,url_sq,url_m,url_o,description,license,date_taken,date_upload&format=json&nojsoncallback=?';",
@@ -20,16 +21,17 @@
 				"    out.say('news', out.url); ",
 				"}"
 				],
+                
 		"run":
 		[
-			"if (context.data.fail) { ",
-			"    out.say('error', context.data.message); ",
-			"    out.value = context.data.message; ",
+            "if (context.data.stat == 'fail') { ",
+			"   out.say('error', context.data.message); ",
+			"   context.node_error = context.data.message; ",
 			"} else { ",
-			"    /* make description accessible as a plain string instead of object  */",
+			"   /* make description accessible as a plain string instead of object  */",
 			"    for (var i=0; i < context.data.photoset.photo.length; i++) { ",
 			"        context.data.photoset.photo[i].description_str = context.data.photoset.photo[i].description._content; ",
-			"    }",
+			"     }",
 			"    out.value = context.data.photoset.photo;",
 			"}"
 		],

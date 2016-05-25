@@ -64,8 +64,6 @@
             "out.file = filename; ",
             
             
-			"out.say('progress', typeof out.url); ",
-
             "/* TODO: fix url check */ ",
 			"if(out.url == null || typeof out.url === 'undefined' || out.url == '') { ",
 			"    out.say('progress', 'URL not found!'); ",

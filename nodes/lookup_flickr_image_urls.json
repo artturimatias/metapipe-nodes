@@ -9,12 +9,17 @@
         "hello": 
         [
 			"out.say('news', 'You just created a flickr node for fetching image URLs.'); ",
-			"context.node.out_field = 'id_' + context.node.params.suffix; "
+			"context.node.out_field = 'lookup_photo_sizes'; "
 		],
 		
         "bye": "out.say('finish', 'Deleted flickr node!'); ",
         
-		"init": "out.say('progress', 'Starting to fetch image URLs...');",
+		"init":	[
+				"if(context.node.settings.apikey == '') { ",
+				"   out.say('error', 'You must give an API key!'); ",
+                "   context.init_error = 'API key missing'; ",
+				"}"
+				],
 		
 		"pre_run":
 		[
@@ -28,15 +33,16 @@
 			"    out.value = context.data.sizes; ",
 			"    out.say('progress', '<img src=\"' + context.data.sizes.size[3].source + '\"/>'); ",
 			"} else ",
-			"    out.say('error', 'Request failed!'); "
+			"   out.say('error', context.data.message); ",
+            "   context.node_error = context.data.message; "
 			],
 			
 		"finish":"out.say('finish', 'Flickr image URLs fetched'); "
 	},
 	
 	"views": {
-		"data_static":"<button data-bind=\"click: prevPage\">prev</button>\n<button data-bind=\"click: nextPage\">next</button>\n\n<div>\n<table>\n<thead>\n<tr>\n<th id=\"vcc\" data-bind=\"click: sort\">[count]</th>\n<th id=\"id\" data-bind=\"click: sort\">id</th>\n<th id=\"title\" data-bind=\"click: sort\">title</th>\n<th id=\"description\" >description</th>\n<th id=\"link\" >link</th>\n </tr>\n</thead>\n\n<tbody data-bind=\"foreach: collection\">\n<tr>\n<td data-bind=\"text: vcc\"></td>\n<td data-bind=\"text: id\"></td>\n<td >\n<img data-bind=\"attr:{src: id_photo_sizes.size[1].source}\"></img>\n</td>\n<td data-bind=\"text: title\"></td>\n\n </tr>\n </tbody>\n </table>\n</div>\n",
-		"params":"no parameters<input type=\"hidden\" name=\"suffix\" id=\"suffix\" value='photo_sizes'/>",
+		"data_static":"<button data-bind=\"click: prevPage\">prev</button>\n<button data-bind=\"click: nextPage\">next</button>\n\n<div>\n<table>\n<thead>\n<tr>\n<th id=\"vcc\" data-bind=\"click: sort\">[count]</th>\n<th id=\"id\" data-bind=\"click: sort\">id</th>\n<th id=\"title\" data-bind=\"click: sort\">title</th>\n<th id=\"description\" >description</th>\n<th id=\"link\" >link</th>\n </tr>\n</thead>\n\n<tbody data-bind=\"foreach: collection\">\n<tr>\n<td data-bind=\"text: vcc\"></td>\n<td data-bind=\"text: id\"></td>\n<td >\n<img data-bind=\"attr:{src: lookup_photo_sizes.size[1].source}\"></img>\n</td>\n<td data-bind=\"text: title\"></td>\n\n </tr>\n </tbody>\n </table>\n</div>\n",
+		"params":"no parameters",
 		"settings":"<label>Flickr API key </label><input type=\"text\" name=\"apikey\" id=\"apikey\" required />"
 	}
 

@@ -35,11 +35,11 @@
         [
             "var c = context; ",
 			"if(context.response.statusCode == 200) {",
+			"   var numFound = parseInt(context.data.resultCount, 10);",
+            "   var pageCount = Math.ceil(numFound/c.var.limit)  ; ",
             "   out.say('progress', 'Fetching page ' + c.var.page + ' of '+pageCount+ ' Total: ' + numFound); ",
             "   var imgBase = 'https://api.finna.fi'; ",
             "   var result = [];", 
-			"   var numFound = parseInt(context.data.resultCount, 10);",
-            "   var pageCount = Math.ceil(numFound/c.var.limit)  ; ",
             "   c.var.page++; ",
             "   var recs = context.data.records; ",
             "   /* we do some data cleaning here */",

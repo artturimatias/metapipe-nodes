@@ -35,7 +35,7 @@
         [
             "var c = context; ",
 			"if(context.response.statusCode == 200) {",
-            "   out.say('progress', 'Fetching page ' + c.var.page + 'of '+pageCount+ ' Total: ' + numFound); ",
+            "   out.say('progress', 'Fetching page ' + c.var.page + ' of '+pageCount+ ' Total: ' + numFound); ",
             "   var imgBase = 'https://api.finna.fi'; ",
             "   var result = [];", 
 			"   var numFound = parseInt(context.data.resultCount, 10);",

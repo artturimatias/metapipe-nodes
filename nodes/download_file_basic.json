@@ -3,6 +3,7 @@
     "type": "download",
     "subtype": "basic",
     "title": "file",
+    "status": "almost good",
     "description": "Download file from URL.",
 
 
@@ -27,14 +28,49 @@
         
         "pre_run": 
         [
+            "var c = context; ",
+            "out.url = context.base_url + context.doc[context.in_field]; ",
+            "var filename = ''; ",
+            
+            "/* create file name */ ",
+            "if (c.node.params.filename_type == 'url') { ", 
+            "   var split = out.url.split('/'); ",
+            "   filename = split[split.length-1]; ",
+            
+            "} else if (c.node.params.filename_type == 'record') { ", 
+            "   filename = c.doc[c.node.params.filename__record]; ",
+            
+            "} else if (c.node.params.filename_type == 'own') { ", 
+            "   filename = c.node.params.file__1; ",
+            "   filename += c.get(c.doc, c.node.params.file__2); ",
+            "   filename += c.node.params.file__3; ",
+            "   filename += c.get(c.doc, c.node.params.file__4); ",
+            "   filename += c.node.params.file__5; ",
+            "   filename += c.get(c.doc, c.node.params.file__6); ",
+                "if(c.node.params.counter == 'yes') ",
+            "       filename += c.count; ",
+            "}",
+            
+            "/* static file extension */ ",
+            "if (c.node.params.file__ext != '') {",
+            "   var ext = c.node.params.file__ext.replace('.', ''); ",
+            "   filename += '.' + ext; ",
+            "}",
+            
+            "/* fallback */ ",
+            "if (filename == '') ",
+            "   filename = c.count; ",
+             
+            "out.file = filename; ",
+            
+            
+			"out.say('progress', typeof out.url); ",
 
-			"out.url = context.base_url + context.doc[context.in_field]; ",
-            "    /* create file name */",
-			"out.file = context.count + '.jpg'; ",
-
-			"if(out.url == null) ",
-			"    out.say('progress', 'URL not found!');",
-			"else ",
+            "/* TODO: fix url check */ ",
+			"if(out.url == null || typeof out.url === 'undefined' || out.url == '') { ",
+			"    out.say('progress', 'URL not found!'); ",
+            "    out.url = 'http://localhost/'; ",
+			"} else ",
 			"    out.say('progress', 'starting to download:' + out.url); "
         ],
         
@@ -42,6 +78,10 @@
                 "if(context.error == null) {",
                 "   out.value = context.path.join(context.node.dir, out.file); ",
                 "   out.say('progress', 'server said: ' + context.response.statusCode); ",
+                "   out.say('progress', 'server said: ' + context.response.headers['content-type']); ",
+                "    var len = parseInt(context.response.headers['content-length'], 10); ",
+                "    var total = len / 1048576; ",
+                "    out.say('progress', 'Downloaded ' + total.toFixed(2) + ' Mt'); ",
                 "   context.node.download_counter++",
                 "} else ",
                 "   out.say('error', context.error); "
@@ -54,26 +94,44 @@
         "params":[
                     "<label>From where? (url)</label>",
                     "<input name='base_url' class='short_input'/> + ",
-                    "<input name='in_field' class='dynamic_field middle_input'/>",
-                    "<label>How to name files?</label> ",
-                    "<select id='download_node_filename' name='filename_type'> ",
-                    "    <option value='original' selected='selected'>use original</option> ",
+                    "<input id='download_simple_in' name='in_field' class='dynamic_field middle_input'/>",
+
+                    "<label>How to name files? </label> ",
+                    "<select name='filename_type'> ",
+                    "    <option value='url' selected='selected'>use last part of link (direct download URL)</option> ",
+                    "    <option value='record' >filename can be found on records</option> ",
                     "    <option value='own'>make your own</option>",
                     "</select> ",
-                    "<label class='hidden' style='display:none'>construct your own filename (not implemented)</label>",
-                    "<input name='file__1' class='short_input hidden'/> + ",
-                    "<input name='file__2' class='dynamic_field middle_input hidden' /><span class='hidden'> + </span><br>",
-                    "<input name='file__3' class='short_input hidden'/><span class='hidden'> + </span>",
-                    "<input name='file__4' class='dynamic_field middle_input hidden' /><span class='hidden'> + </span><br>",
-                    "<input name='file__5' class='short_input hidden'/><span class='hidden'> + * </span>",
-                    "<select name='counter' class='hidden'> ",
-                    "    <option>document counter</option> ",
-                    "    <option>no counter</option>",
-                    "</select> ",
-                    "<div class='hidden' style='display:none'>*) using document counter prevents duplicate file names</div>",
-                    "<script>$('#download_node_filename').change(function() {$('#node_creator .params .hidden').toggle(); });</script>"
+                    
+                    "<label>Filename can be found on records</label> ",
+                    "<input name='filename__record' class='dynamic_field middle_input ' /><span class=''> + </span><br>",
+
+                    "<label>Make your own filename </label> ",
+                    "<input name='file__1' class='short_input '/> + ",
+                    "<input name='file__2' class='dynamic_field middle_input ' /><span class=''> + </span><br>",
+                    "<input name='file__3' class='short_input '/><span class=''> + </span>",
+                    "<input name='file__4' class='dynamic_field middle_input ' /><span class=''> + </span><br>",
+                    "<input name='file__5' class='short_input '/><span class=''> +  </span>",
+                    "<input name='file__6' class='dynamic_field middle_input ' /><span class=''> + </span><br>",
+                    
+                    "<select name='counter' class=''> ",
+                    "    <option value='no' selected='selected'>no counter</option>",
+                    "    <option value='yes'>document counter</option> ",
+                    "</select> *)",
+                    "<div>*) using document counter prevents duplicate file names</div>",
+                    
+                    
+                    "<label>Here you can add a static file extension if needed (like .jpg) </label> ",
+                    "<input name='file__ext' class='short_input '/> ",
+                    
+                    "<div>NOTE: file names and path are written to <span class='strong' id='download_simple_out'>_download</span></div>",
+                    "<script> ",
+                    "$('#download_simple_in').change(function() {",
+                    "    $('#download_simple_out').text($('#download_simple_in').val() + '_download'); }); ",
+                    "</script>"
 
                     ],
+                    
         "settings": [
                     "no settings"
                     ]

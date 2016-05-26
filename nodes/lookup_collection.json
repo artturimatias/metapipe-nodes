@@ -23,8 +23,11 @@
 		[
 			"out.updatequery = {}; ",
 			"out.updatequery._id = {$in:context.doc.ids}; ",
-			"out.setter = {}; ",
-			"out.setter[context.node.out_field] = context.doc[context.node.params.copy_field]; "
+            "   /* we add values to array in target field  */",
+            "var value = {}; ",
+            "value[context.node.params.out_field] = context.doc[context.node.params.copy_field]; ",
+            "update = {$push:value}; ",
+			"out.mongoDBupdate = update; "
 		],
 		"finish":"out.say('finish', 'Lookup finished');"
 	},

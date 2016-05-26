@@ -1,0 +1,109 @@
+{
+	"nodeid": "view_chart_VIAF",
+	"type": "view",
+	"subtype": "interactive",
+	"title": "VIAF - interactive lookup",
+    "status": "proof of concept",
+	"description": "Interactive VIAF lookup (DOES NOT SAVE YET!)",
+
+	"scripts": {
+		"hello": 
+		[
+			"out.say('news', 'You added a VIAF node');"
+		],
+		
+        "bye": "out.say('news', 'Deleted node. Bye!'); ",
+        
+        "view": 
+        [
+            "var coll = context.node.collection; ",
+            "var in_field = context.node.params.in_field; ",
+            "var html = context.node.storage.html.join('\\n'); ",
+            "var script = '<script>\\n'; ",
+            "script += 'var in_field = \"' + context.node.params.in_field + '\";\\n'; ",
+            "script += 'var url = \"http://localhost:3000/get/collection/' + coll + '?skip=0&sort='+in_field+'&limit=0&fields='+in_field+'\";\\n';  ",
+            "script += 'var viaf_url = \"http://www.viaf.org/viaf/AutoSuggest\";\\n'; ",
+            "script += context.node.storage.script.join('\\n'); ",
+            "script += '</script>'; ",
+            "html = html.replace('[[script]]', script); ",
+            "out.html = html;"
+        ]
+	},
+	
+	"views": {
+		"params": [
+			"<label>input</label>",
+			"<input class='dynamic_field' name='in_field' /> ",
+			"<label>output</label>",
+			"<input class='' name='out_field' value='lookup_viaf' /> "
+		],
+		"settings":"no settings. Just click the node header to open the view."
+	},
+    
+    "storage": {
+        "html":
+        [
+            "<html><head> ",
+            "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /> ",
+            "<script type=\"text/javascript\" src=\"../../js/jquery-2.1.1.min.js\"></script> ",
+            "<script type=\"text/javascript\" src=\"../../js/knockout.js\"></script> ",
+            "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/metapipe.css\" /> ",
+            "</head><body> ",
+            "<h1>Interactive VIAF lookup</h1> ",
+            "<div id=\"viaf_container__node_id__\"><div id=\"chart\"></div></div> ",
+            "<div id=\"count\"></div> ",
+
+
+
+            
+            "[[script]] ",
+            
+            "</body></html> "
+        ],
+        "script": 
+        [
+            "function getData() {",
+            "   $.getJSON( url, function(data) { ",
+            "       var html = '<table>\\n';",
+            "       html += '<tr>\\n'; ",
+            "       html += '<th>'+in_field+'</th><th>viaf term</th><th>viafid</th>\\n'; ",
+            "       html += '</tr><tr>\\n'; ",
+            "       for(var i = 0; i < data.length; i++) { ", 
+            "           html += '<td><button class=\"term\">' + data[i][in_field] + '</button></td>\\n'; ",
+            "           html += '<td><div class=\"viaf\"></div></td>\\n'; ",
+            "           html += '<td></td>\\n'; ",
+            "           html += '</tr>\\n'; ",
+            "       }",
+            "       html += '</table>\\n'; ",
+            "       $('#viaf_container__node_id__').append(html); ",
+            "       console.log(data); ",
+            "       $('#count').text(data.length); ",
+            "   }); ",
+            "}",        
+            "function viaf(name, target) {",
+            "   $.getJSON( 'http://localhost:3000/proxy/?url=' + viaf_url + '&query=' + name, function(data) { ",
+            "       console.log(data); ",
+            "       for(var i = 0; i < data.result.length; i++) {",
+            "           if (data.result[i].nametype == 'personal') { ",
+            "               target.parents('tr').find('.viaf').append('<div class=\"viaf_select\">' + data.result[i].term + '</div>'); ",
+            "           }",
+            "       }",
+            "   }); ",
+            "}",
+            "$('#viaf_container__node_id__').on('click', '.term', function(event) { ",
+            "   var obj = $(event.target); ",
+            "   viaf(obj.text(), obj); ",
+            "})",
+            "$('#viaf_container__node_id__').on('click', '.viaf_select', function(event) { ",
+            "   var obj = $(event.target); ",
+            "   var parent = obj.parent(); ",
+            "   var viaf_term = obj.text(); ",
+            "   parent.empty(); ",
+            "   parent.append(viaf_term); ",
+            "})",
+            "getData();"
+        ]
+    
+    }
+
+}

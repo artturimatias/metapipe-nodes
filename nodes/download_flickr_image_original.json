@@ -3,24 +3,25 @@
     "type": "download",
     "subtype": "Flickr",
     "title": "original images",
-    "description": "BROKEN! Downloads original images from Flickr.",
+    "status": "works",
+    "description": "Downloads original images from Flickr.",
 
 
     "scripts": {
         "hello":
         [
-            "out.say('news', 'You added a download node'); "
+            "out.say('news', 'You added a download node'); ",
+            "context.node.out_field = 'downloaded_original'; "
         ],
         
         "init":
         [
-            "out.field = context.node.params.field + '_download'; ",
             "out.say('progress', 'I have ' + context.doc_count + ' images to download!'); "
         ],
         
         "pre_run": 
         [
-			"var url = context.doc[context.node.params.field]; ",
+			"var url = context.doc['url_o']; ",
 			"var splitted = url.split('/'); ",
 			"out.url = url; ",
 			"out.file = splitted[splitted.length - 1]; ",
@@ -38,23 +39,7 @@
     "views": {
         "params":
         [
-            "<input type=\"hidden\" name=\"field\" id=\"field\" value='url_m'/><br>",
-            "<label>How to name files?</label> ",
-            "<select name='filename_type'> ",
-            "    <option value='original' selected='selected'>use original</option> ",
-            "    <option value='own'>make your own</option>",
-            "</select> ",
-            "<label>construct your own filename</label>",
-            "<input name='file__1' class='short_input'/> + ",
-            "<input name='file__2' class='dynamic_field middle_input' /> + <br>",
-            "<input name='file__3' class='short_input'/> + ",
-            "<input name='file__4' class='dynamic_field middle_input' /> + <br>",
-            "<input name='file__5' class='short_input'/> + * ",
-            "<select name='counter'> ",
-            "    <option>document counter</option> ",
-            "    <option>no counter</option>",
-            "</select> ",
-            "<br>*) using document counter prevents duplicate file names"
+            "no params. HINT: If you want to name files diffrently, use generic download node and choose \"url_o\" as input field."
         ],
         "settings": 
         [

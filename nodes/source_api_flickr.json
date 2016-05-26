@@ -69,7 +69,7 @@
 			"                <td data-bind=\"text: datetaken\"></td>",
 			"                <td><a data-bind=\"attr:{href: url_o}\">link</a></td>",
 			"                <! -- show details if image details node is run -->",
-			"                <!-- ko if: $data.hasOwnProperty(\"id_photo_details\") -->",
+			"                <!-- ko if: $data.hasOwnProperty(\"lookup_photo_details\") -->",
 			"                    <td data-bind=\"text: id_photo_details.description._content\"></td>",
 			"                <!-- /ko --> ",
 			"            </tr> ",

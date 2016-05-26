@@ -3,6 +3,7 @@
     "type": "download",
     "subtype": "Flickr",
     "title": "images any size",
+    "status": "works",
     "description": "Downloads images in any size from Flickr URL (needs Flickr getSizes node).",
 
 
@@ -11,15 +12,15 @@
         "hello":
         [
             "out.say('news', 'You added a download node'); ",
-            "var sizes = ['','','','small','', 'medium','', 'original']; ",
-            "context.node.title = sizes[context.node.params.size] + ' ' + context.node.title;"
+            "/* we can save things in context.node in hello script. Node is preserved but context is thrown away */",
+            "context.node.sizenames = ['square','large_square','thumb','small','small_320','medium','medium_640','medium_800','large']; ",
+            "context.node.title = context.node.sizenames [context.node.params.size] + ' ' + context.node.title; ",
+            "context.node.out_field = 'downloaded_' + context.node.sizenames [context.node.params.size]; "
         ],
         
         "init":
         [
-            "out.say('progress', 'I have ' + context.doc_count + ' images to download!'); ",
-            "var sizes = ['','','','small','','medium','','original']; ",
-            "out.field = sizes[context.node.params.size]; "
+            "out.say('progress', 'I have ' + context.doc_count + ' images to download!'); "
         ],
 
         "pre_run": 
@@ -56,7 +57,7 @@
                     "<select name=\"size\">",
                     "    <option value='3'>small</option>",
                     "    <option value='5'>medium</option>",
-                    "    <option value='7'>original</option>",
+                    "    <option value='9'>large</option>",
                     "</select>"
                     ],
         "settings": [

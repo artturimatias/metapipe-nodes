@@ -2,6 +2,7 @@
 	"nodeid": "source_group",
 	"type": "source",
 	"subtype": "group",
+    "status": "usable",
 	"title": "Group fields",
 	"description": "Group by values",
 

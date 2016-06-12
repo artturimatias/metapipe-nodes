@@ -3,6 +3,7 @@
 	"title": "Flickr - image info",
 	"type": "lookup",
 	"subtype": "API",
+    "status": "usable",
 	"description": "Flickr: Fetch image data (requires an API key)",
 
 	"scripts": {

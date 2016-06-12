@@ -3,7 +3,7 @@
     "type": "download",
     "subtype": "basic",
     "title": "file",
-    "status": "almost good",
+    "status": "usable",
     "description": "Download file from URL.",
 
 
@@ -60,6 +60,9 @@
             "/* fallback */ ",
             "if (filename == '') ",
             "   filename = c.count; ",
+            
+            "/* remove characters that might confuse OS */ ",
+            "filename = filename.replace(/[\/]/g, '_'); ",
              
             "out.file = filename; ",
             

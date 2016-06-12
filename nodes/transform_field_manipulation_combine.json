@@ -3,6 +3,7 @@
 	"title": "Combine fields",
 	"type": "transform",
 	"subtype": "field manipulation",
+    "status": "usable",
 	"description": "Combine string fields with arbitrary strings",
 	"scripts": {
 		"hello":
@@ -43,7 +44,7 @@
 	"views": {
 		"params": [
 			"<label>description</label> <input name='title' />",
-			"<label>where to save page title?</label> <input name='out_field'/ value='combined'/>"
+			"<label>where to save the result?</label> <input name='out_field'/ value='combined'/>"
 		],
 		
 		"settings":

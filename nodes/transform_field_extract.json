@@ -3,6 +3,7 @@
 	"title": "Extract",
 	"type": "transform",
 	"subtype": "string manipulation",
+    "status": "usable",
 	"description": "Extract some piece from string",
 	"scripts": {
 		"hello":

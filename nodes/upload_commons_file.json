@@ -4,6 +4,7 @@
     "type": "upload",
     "subtype": "mediawiki_bot",
     "subsubtype":"file",
+    "status": "usable",
     "description": "Upload files to <a href=\"https://commons.wikimedia.org/wiki/Main_Page\" target=\"_blank\">wikimedia commons</a>",
 
     "scripts": {

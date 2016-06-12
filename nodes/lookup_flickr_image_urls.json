@@ -3,6 +3,7 @@
 	"title": "Flickr - image urls",
 	"type": "lookup",
 	"subtype": "API",
+    "status": "usable",
 	"description": "Flickr: Fetch image URLs for different sizes (requires an API key)",
 
 	"scripts": {

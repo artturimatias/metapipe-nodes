@@ -3,6 +3,7 @@
 	"type": "collection",
 	"subtype": "basic",
 	"title": "basic collection",
+    "status": "usable",
 	"usage":"",
 	"description": "Creates a new collection (table)",
 	

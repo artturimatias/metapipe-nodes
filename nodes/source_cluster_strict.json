@@ -25,7 +25,7 @@
 			"<label>collection </label>",
 			"<input class='dynamic_collection' name='source_collection' /> ",
 			"<label>field to be grouped </label>",
-			"<input name='in_field' /> "
+			"<input class='dynamic_field' name='in_field' /> "
 		],
 		"settings":"no settings"
 	}

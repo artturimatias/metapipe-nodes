@@ -50,7 +50,7 @@
 			"<label>lookup collection</label> collection name where lookup data is",
 			"<input class='dynamic_collection' name='source_collection' /> ",
 			"<label>copy field</label> which field is copied to target collection",
-			"<input name='copy_field' /> ",
+			"<input class='dynamic_field' name='copy_field' /> ",
 			"<label>out field</label> ",
 			"<input name='out_field' value='lookup'/> "
 		],

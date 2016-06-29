@@ -2,6 +2,7 @@
 	"nodeid": "view_interactive_georeferencer",
 	"type": "view",
 	"subtype": "interactive",
+    "status": "works",
 	"title": "Georeferencer for maps",
 	"description": "Add control point to maps.",
 
@@ -16,7 +17,11 @@
 		
 		"run":"out.value = context.data;",
 		
-		"finish":"out.say('finish', 'Data grouped from collection ' + context.node.params.source_collection);"
+		"finish":"out.say('finish', 'Data grouped from collection ' + context.node.params.source_collection);",
+        
+        "view": [
+            "out.htmlfile = 'view_interactive_georeferencer.html';"
+        ]
 	},
 	
 	"views": {

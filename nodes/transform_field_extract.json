@@ -25,7 +25,7 @@
 
             "function extract (val) { ",
             "   var extracted = []; ",
-            "   if (val.constructor.name === 'Array' ) {",
+            "   if (val.constructor && val.constructor.name === 'Array' ) {",
             "       for (var i = 0; i < val.length; i++) { ",
             "           var extracted2 = extract(val[i]); ",
             "           /* push result  */",
@@ -68,7 +68,9 @@
             "}",
             
             "var val = context.doc[context.node.params.in_field]; ",
-            "out.value = extract(val);" 
+
+            "if (val != null) ",
+            "    out.value = extract(val);" 
 
 
 		],

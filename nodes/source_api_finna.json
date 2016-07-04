@@ -19,13 +19,25 @@
             "var c = context; ",
             "var url = 'https://api.finna.fi/v1/search?'; ",
             "var search = context.node.settings.search; ",
-            "var format = '&filter[]=' + context.node.settings.format; ", 
-            "var license = '&filter[]=' + context.node.settings.license; ", 
+            "var license = context.node.settings.license; ", 
             "c.var = {}; ",
             "c.var.page = 1; ",
             "c.var.limit = 20; ",
-            "c.var.url = url + 'lookfor='+search+'&limit='+c.var.limit+'&filter[]=online_boolean:1' + format + license;",
-            "out.say('progress', c.var.url);",
+            "var query = search.split('?'); ",
+            
+            "if (query.length == 2) { ",
+            "   var params = query[1].split('&'); ",
+            
+            "   /* add license to query */",
+            "   if(license != '') ",
+            "       c.var.url = url + query[1] + '&filter[]=' + license; ",
+            "   else ",
+            "       c.var.url = url + query[1];",
+            "   out.say('progress', c.var.url);",
+            "} else { ",
+            "    out.say('error', 'Haku ei onnistu! Kopioitko osoiterivin oikein?'); ",
+            "}",
+            
             "out.url = c.var.url + '&page=' + c.var.page; "
             
 
@@ -34,10 +46,10 @@
         "run":
         [
             "var c = context; ",
-			"if(context.response.statusCode == 200 && context.data.resultCount) {",
+			"if(context.response && context.response.statusCode == 200 && context.data.resultCount) {",
 			"   var numFound = parseInt(context.data.resultCount, 10);",
             "   var pageCount = Math.ceil(numFound/c.var.limit)  ; ",
-            "   out.say('progress', 'Fetching page ' + c.var.page + ' of '+pageCount+ ' Total: ' + numFound); ",
+            "   out.say('progress', 'Fetching page ' + c.var.page + ' of '+pageCount+ ' Total records: ' + numFound); ",
             "   var imgBase = 'https://api.finna.fi'; ",
             "   var result = [];", 
             "   c.var.page++; ",
@@ -79,31 +91,34 @@
                  
 		"settings":
 		[
-                    "<label>Sanahaku</label>",
+                    "<label>Tee haluamasi haku Finnassa ja kopioi sitten URL tähän:</label>",
                     "<input id='source_api_finna_search' name='search'></input>",
-                    "<label>Valitse aineistolaji</label>",
-                    "<select name=\"format\">",
-                    "    <option value='format:0/Image/'>Image</option>",
-                    "    <option value='format:0/Book/'>Book</option>",
-                    "    <option value='format:0/Thesis/'>Thesis</option>",
-                    "</select>",
+
                     "<label>Valitse lisenssi</label>",
-                    "<select name=\"license\">",
+                    "<select id=\"source_api_finna_license\" name=\"license\">",
+                    "    <option value=''>ei rajausta</option>",
                     "    <option value='usage_rights_str_mv:usage_B'>Saa muokata, myös kaupallinen</option>",
                     "    <option value='usage_rights_str_mv:usage_C'>Muutoksia tekemättä, myös kaupallinen</option>",
                     "    <option value='usage_rights_str_mv:usage_D'>Saa muokata, ei-kaupallinen</option>",
                     "</select>",
-                    "<button id='source_api_finna_hae'>hae lukumäärä</button>",
+                    
+                    
                     "<script>",
                     "    $('#source_api_finna_hae').on('click', function() { ",
                     "        var params = {}; ",
                     "        params.url = 'https://api.finna.fi/v1/search?'; ",
                     "        var search = $('#source_api_finna_search').val(); ",
-                    "        params.query = 'lookfor='+search+'&limit=0&filter[]=online_boolean:1';",
-                    "        console.log(params.url + params.search); ",
-                    "        $.post('http://localhost:3000/proxy/', params, function(data) { ",
-                    "            alert(data.resultCount); ", 
-                    "        })", 
+                    "        var license = $('#source_api_finna_license').val(); ",
+                    "        var query = search.split('?'); ",
+                    "        if(query.length == 2) { ",
+                    "           params.query = query[1];",
+                    "           console.log(params.url + params.search); ",
+                    "           $.post('http://localhost:3000/proxy/', params, function(data) { ",
+                    "               alert(data.resultCount); ", 
+                    "           })", 
+                    "       } else { ",
+                    "           alert('Haku on viallinen! Kopioitko osoiterivin oikein?'); ",
+                    "       } ",
                     "    })",
                     "</script>"
 		]

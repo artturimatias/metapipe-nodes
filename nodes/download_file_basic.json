@@ -104,10 +104,10 @@
                     "    <option value='own'>make your own</option>",
                     "</select> ",
                     
-                    "<label>Filename can be found on records</label> ",
-                    "<input name='filename__record' class='dynamic_field middle_input ' /><span class=''> + </span><br>",
+                    "<label>Filename can be found on records (remember to choose this from options above)</label> ",
+                    "<input name='filename__record' class='dynamic_field middle_input ' /><span class=''> </span><br>",
 
-                    "<label>Make your own filename </label> ",
+                    "<label>Make your own filename (remember to choose this from options above)</label> ",
                     "<input name='file__1' class='short_input '/> + ",
                     "<input name='file__2' class='dynamic_field middle_input ' /><span class=''> + </span><br>",
                     "<input name='file__3' class='short_input '/><span class=''> + </span>",

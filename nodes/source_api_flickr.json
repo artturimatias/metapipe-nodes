@@ -5,7 +5,7 @@
 	"title": "Flickr",
     "status": "usable",
 	"usage":"",
-	"description": "Import from Flickr (requires an API key)",
+	"description": "Import from Flickr (requires an <a target=\"_blank\" href=\"https://www.flickr.com/services/api/misc.api_keys.html\">API key</a>)",
 	
 	"scripts": {
 		"hello": "out.say('news', 'You added a Flickr import node'); ",
@@ -17,7 +17,7 @@
                 "   context.init_error = 'API key missing'; ",
 				"} else {",
 				"    var base_url = 'https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos';",
-				"    var format = '&extras=license,url_sq,url_m,url_o,description,license,date_taken,date_upload&format=json&nojsoncallback=?';",
+				"    var format = '&extras=license,url_q,url_m,url_o,description,license,date_taken,date_upload&format=json&nojsoncallback=?';",
 				"    out.url = base_url + '&photoset_id=' + context.node.params.album + format + '&api_key=' + context.node.settings.apikey;",
 				"    out.say('news', out.url); ",
 				"}"
@@ -28,11 +28,18 @@
             "if (context.data.stat == 'fail') { ",
 			"   out.say('error', context.data.message); ",
 			"   context.node_error = context.data.message; ",
+            
 			"} else { ",
-			"   /* make description accessible as a plain string instead of object  */",
+            "   /* data cleaning: /* ",
+			"   /* - make description accessible as a plain string instead of object /* ",
+            "   /* - add thumbnail field */",
+            "   /* - delete description object (remains as description_str */",
 			"    for (var i=0; i < context.data.photoset.photo.length; i++) { ",
 			"        context.data.photoset.photo[i].description_str = context.data.photoset.photo[i].description._content; ",
+            "       context.data.photoset.photo[i].thumbnail_html = '<img src=\"' + context.data.photoset.photo[i].url_q + '\"/>'; ",
+            "       delete context.data.photoset.photo[i].description; ",
 			"     }",
+            
 			"    out.value = context.data.photoset.photo;",
 			"}"
 		],
@@ -40,46 +47,10 @@
 	},
 	
 	"views": {
-		"data_static":
-		[
-			"<button data-bind=\"click: prevPage\">prev</button>",
-			"<button data-bind=\"click: nextPage\">next</button>",
-			"<div id=\"node_bar\" class=\"selected\">",
-			"    <h2 class=\"selected\">Flickr data set</h2>",
-			"</div>",
-			"<div>",
-			"    <table>",
-			"        <thead>",
-			"            <tr>",
-			"                <th id=\"vcc\" data-bind=\"click: sort\">[count]</th>",
-			"                <th id=\"id\" data-bind=\"click: sort\">id</th>",
-			"                <th id=\"image\" >image</th>",
-			"                <th id=\"title\" >title</th>",
-			"                <th id=\"description\" >description</th>",
-			"                <th id=\"date_taken\" >date taken</th>",
-			"                <th id=\"date_taken\" >original</th>",
-			"            </tr>",
-			"        </thead>",
-			"        <tbody data-bind=\"foreach: collection\">",
-			"            <tr>",
-			"                <td data-bind=\"text: vcc\"></td>",
-			"                <td data-bind=\"text: id\"></td>",
-			"                <td > <img data-bind=\"attr:{src: url_sq}\"></img> </td>",
-			"                <td data-bind=\"text: title\"></td>",
-			"                <td data-bind=\"text: description._content\"></td>",
-			"                <td data-bind=\"text: datetaken\"></td>",
-			"                <td><a data-bind=\"attr:{href: url_o}\">link</a></td>",
-			"                <! -- show details if image details node is run -->",
-			"                <!-- ko if: $data.hasOwnProperty(\"lookup_photo_details\") -->",
-			"                    <td data-bind=\"text: id_photo_details.description._content\"></td>",
-			"                <!-- /ko --> ",
-			"            </tr> ",
-			"        </tbody> ",
-			"    </table>",
-			"</div>"
-		],
+
 		"params":
 		[
+            "<h1>FLICKR</h1>",
 			"<label>title</label>",
 			"<input type=\"text\" name=\"title\" id=\"title\"/>",
 			"<label>Album ID</label>",

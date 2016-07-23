@@ -25,68 +25,6 @@
             "context.node.download_counter = 0; ",
             "out.say('progress', 'I have ' + context.doc_count + ' images to download!'); "
         ],
-        
-        "pre_run": 
-        [
-            "var c = context; ",
-            "out.url = context.base_url + context.doc[context.in_field]; ",
-            "var filename = ''; ",
-            
-            "/* create file name */ ",
-            "if (c.node.params.filename_type == 'url') { ", 
-            "   var split = out.url.split('/'); ",
-            "   filename = split[split.length-1]; ",
-            
-            "} else if (c.node.params.filename_type == 'record') { ", 
-            "   filename = c.doc[c.node.params.filename__record]; ",
-            
-            "} else if (c.node.params.filename_type == 'own') { ", 
-            "   filename = c.node.params.file__1; ",
-            "   filename += c.get(c.doc, c.node.params.file__2); ",
-            "   filename += c.node.params.file__3; ",
-            "   filename += c.get(c.doc, c.node.params.file__4); ",
-            "   filename += c.node.params.file__5; ",
-            "   filename += c.get(c.doc, c.node.params.file__6); ",
-                "if(c.node.params.counter == 'yes') ",
-            "       filename += c.count; ",
-            "}",
-            
-            "/* static file extension */ ",
-            "if (c.node.params.file__ext != '') {",
-            "   var ext = c.node.params.file__ext.replace('.', ''); ",
-            "   filename += '.' + ext; ",
-            "}",
-            
-            "/* fallback */ ",
-            "if (filename == '') ",
-            "   filename = c.count; ",
-            
-            "/* remove characters that might confuse OS */ ",
-            "filename = filename.replace(/[\/]/g, '_'); ",
-             
-            "out.file = filename; ",
-            
-            
-            "/* TODO: fix url check */ ",
-			"if(out.url == null || typeof out.url === 'undefined' || out.url == '') { ",
-			"    out.say('progress', 'URL not found!'); ",
-            "    out.url = 'http://localhost/'; ",
-			"} else ",
-			"    out.say('progress', 'starting to download:' + out.url); "
-        ],
-        
-        "run": [
-                "if(context.error == null) {",
-                "   out.value = context.path.join(context.node.dir, out.file); ",
-                "   out.say('progress', 'server said: ' + context.response.statusCode); ",
-                "   out.say('progress', 'server said: ' + context.response.headers['content-type']); ",
-                "    var len = parseInt(context.response.headers['content-length'], 10); ",
-                "    var total = len / 1048576; ",
-                "    out.say('progress', 'Downloaded ' + total.toFixed(2) + ' Mt'); ",
-                "   context.node.download_counter++",
-                "} else ",
-                "   out.say('error', context.error); "
-                ],
                 
         "finish":"out.say('finish', '<h2>Downloaded '+context.node.download_counter+' files!</h2>');"
     },

@@ -1,5 +1,6 @@
 # metapipe-nodes
 
+NOTE: these docs are not perfectly valid anymore. Nodes are now internal and the method for user nodes is currently missing.
 ## Writing your own nodes
 
 Nodes are the  building blocks of data manipulation in GLAMpipe. 
